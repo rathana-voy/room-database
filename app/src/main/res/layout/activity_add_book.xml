@@ -1,0 +1,53 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical"
+    android:padding="24dp"
+    tools:context=".MainActivity">
+
+    <TextView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="16dp"
+        android:gravity="center"
+        android:text="Enter book information"
+        style="@style/PrimaryStyle"
+        android:textStyle="bold"
+        android:textSize="26sp" />
+
+    <EditText
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:hint="Book title"
+        android:gravity="center"
+        style="@style/PrimaryStyle"
+        android:layout_marginTop="16dp"
+        android:id="@+id/title"/>
+    <EditText
+        style="@style/PrimaryStyle"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:hint="Author"
+        android:gravity="center"
+        android:layout_marginTop="16dp"
+        android:id="@+id/author"/>
+    <EditText
+        style="@style/PrimaryStyle"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:hint="publication date"
+        android:gravity="center"
+        android:layout_marginTop="16dp"
+        android:id="@+id/dateCreate"/>
+
+    <androidx.appcompat.widget.AppCompatButton
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="Save"
+        style="@style/PrimaryStyle"
+        android:id="@+id/btnSave"
+        android:layout_marginTop="50dp" />
+
+</LinearLayout>
