@@ -12,16 +12,10 @@
         android:layout_height="wrap_content"
         android:layout_marginTop="16dp"
         android:gravity="center"
-        android:text="Enter book information"
+        android:text="Edit book information"
         style="@style/PrimaryStyle"
         android:textStyle="bold"
         android:textSize="26sp" />
-
-    <Spinner
-        android:id="@+id/spinner"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_marginTop="16dp" />
 
     <EditText
         android:layout_width="match_parent"
@@ -30,7 +24,7 @@
         android:gravity="center"
         style="@style/PrimaryStyle"
         android:layout_marginTop="16dp"
-        android:id="@+id/edit"/>
+        android:id="@+id/title"/>
     <EditText
         style="@style/PrimaryStyle"
         android:layout_width="match_parent"
@@ -51,9 +45,9 @@
     <androidx.appcompat.widget.AppCompatButton
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:text="Save"
+        android:text="Update"
         style="@style/PrimaryStyle"
-        android:id="@+id/btnSave"
+        android:id="@+id/btnUpdate"
         android:layout_marginTop="50dp" />
 
 </LinearLayout>

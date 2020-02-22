@@ -2,7 +2,9 @@ package com.rathana.room_database;
 
 import android.content.Intent;
 import android.os.Bundle;
+import android.view.MenuItem;
 import android.view.View;
+import android.widget.PopupMenu;
 
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
@@ -13,7 +15,9 @@ import com.google.android.material.floatingactionbutton.FloatingActionButton;
 import com.rathana.room_database.adapter.BookAdapter;
 import com.rathana.room_database.data.BookStoreDatabase;
 import com.rathana.room_database.data.dao.BookDao;
+import com.rathana.room_database.data.dao.CategoryDao;
 import com.rathana.room_database.data.enitty.Book;
+import com.rathana.room_database.data.enitty.Category;
 
 import java.util.ArrayList;
 
@@ -26,8 +30,12 @@ public class MainActivity extends AppCompatActivity {
 
     private RecyclerView recyclerView;
     private BookAdapter adapter;
-
+    private static int position;
     private static final int REQUEST_ADD_BOOK_CODE = 10;
+    private static final int REQUEST_EDIT_BOOK_CODE = 11;
+    private static final String KEY_BOOK = "book";
+
+    private CategoryDao categoryDao;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -35,10 +43,14 @@ public class MainActivity extends AppCompatActivity {
         setContentView(R.layout.activity_main);
 
         btnAdd = findViewById(R.id.floatingActionButton);
-        bookDao = BookStoreDatabase.getInstance(this).bookDao();
+        BookStoreDatabase database = BookStoreDatabase.getInstance(this);
+        bookDao = database.bookDao();
+        categoryDao = database.categoryDao();
         recyclerView = findViewById(R.id.rvBook);
         setupRecyclerView();
         loadBookList();
+
+//        createDefaultCategory();
 
         btnAdd.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -52,7 +64,13 @@ public class MainActivity extends AppCompatActivity {
     }
 
     private void setupRecyclerView() {
-        adapter = new BookAdapter(new ArrayList<Book>());
+        adapter = new BookAdapter(new ArrayList<Book>(),
+                new BookAdapter.AdapterListener() {
+                    @Override
+                    public void onButtonMoreClicked(View view, Book book, int position) {
+                        openPopupMenu(view, book, position);
+                    }
+                });
         recyclerView.setLayoutManager(new LinearLayoutManager(this));
         recyclerView.setAdapter(adapter);
     }
@@ -68,8 +86,61 @@ public class MainActivity extends AppCompatActivity {
     @Override
     protected void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
-        if (requestCode == REQUEST_ADD_BOOK_CODE && resultCode == RESULT_OK) {
+        if (resultCode == RESULT_OK &&
+                (requestCode == REQUEST_ADD_BOOK_CODE || requestCode == REQUEST_EDIT_BOOK_CODE)) {
             reload();
         }
+    }
+
+    private void editBook(Book book) {
+        Intent intent = new Intent(this, EditActivity.class);
+        intent.putExtra(KEY_BOOK, book);
+        startActivityForResult(intent, REQUEST_EDIT_BOOK_CODE);
+    }
+
+    private void deleteBook(Book book) {
+        if (position >= 0) {
+            bookDao.delete(book);
+            adapter.remove(position);
+        }
+    }
+
+    private void openPopupMenu(View view, final Book book, final int pos) {
+        position = pos;
+        PopupMenu menu = new PopupMenu(this, view);
+        menu.inflate(R.menu.popup_menu);
+        menu.setOnMenuItemClickListener(new PopupMenu.OnMenuItemClickListener() {
+            @Override
+            public boolean onMenuItemClick(MenuItem menuItem) {
+                switch (menuItem.getItemId()) {
+                    case R.id.edit:
+                        editBook(book);
+                        return true;
+                    case R.id.delete:
+                        deleteBook(book);
+                        return true;
+                    default:
+                        return false;
+                }
+            }
+        });
+        menu.show();
+    }
+
+    private void createDefaultCategory() {
+        Category category = new Category();
+        category.name = "History";
+        category.language = "en";
+
+        Category category2 = new Category();
+        category2.name = "Biology";
+        category2.language = "en";
+
+        Category category3 = new Category();
+        category3.name = "Chemistry";
+        category3.language = "en";
+
+        categoryDao.save(category,category2,category3);
+
     }
 }
